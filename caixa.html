@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caixa</title>
+    
+     <style>
+      body {
+        background: #DDD;
+        margin: 0;
+      }
+    </style>
+    
+    <style>
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Caixa</h1>
+
+    <h2>Itens do Pedido</h2>
+    <div id="itens-pedido">
+        <!-- Os itens do pedido serão adicionados aqui dinamicamente -->
+    </div>
+
+    <h2>Total: <span id="total">0</span> R$</h2>
+
+    <h2>Adicionar Item</h2>
+    <form id="formulario">
+        <label for="produto">Produto:</label>
+        <input type="text" id="produto" required>
+
+        <label for="preco">Preço:</label>
+        <input type="number" id="preco" required>
+
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <h2>Finalizar Venda</h2>
+    <button id="finalizar-venda">Finalizar</button>
+
+    <script>
+        // Array para armazenar os itens do pedido
+        var itensPedido = [];
+
+        // Event listener para adicionar um item ao pedido
+        document.getElementById("formulario").addEventListener("submit", function(event) {
+            event.preventDefault(); // Impede que o formulário seja enviado
+
+            // Obter os valores dos campos de texto
+            var produto = document.getElementById("produto").value;
+            var preco = parseFloat(document.getElementById("preco").value);
+
+            // Criar um objeto representando o item do pedido
+            var item = {
+                produto: produto,
+                preco: preco
+            };
+
+            // Adicionar o item ao array de itens do pedido
+            itensPedido.push(item);
+
+            // Criar um novo elemento para exibir o item
+            var divItem = document.createElement("div");
+            divItem.classList.add("item");
+            divItem.innerHTML = '<span>' + produto + '</span><span>' + preco.toFixed(2) + ' R$</span>';
+
+            // Adicionar o item à div de itens do pedido
+            document.getElementById("itens-pedido").appendChild(divItem);
+
+            // Atualizar o total
+            var totalAtual = parseFloat(document.getElementById("total").textContent);
+            var novoTotal = totalAtual + preco;
+            document.getElementById("total").textContent = novoTotal.toFixed(2);
+
+            // Limpar os campos de texto
+            document.getElementById("produto").value = "";
+            document.getElementById("preco").value = "";
+        });
+
+        // Event listener para finalizar a venda
+        document.getElementById("finalizar-venda").addEventListener("click", function() {
+            // Exibir o resumo da venda
+            var resumo = "Resumo da Venda:\n\n";
+            for (var i = 0; i < itensPedido.length; i++) {
+                resumo += itensPedido[i].produto + " - " + itensPedido[i].preco.toFixed(2) + " R$\n";
+            }
+            resumo += "\nTotal: " + document.getElementById("total").textContent + " R$";
+
+            alert(resumo);
+
+            // Reiniciar o sistema
+            reiniciarSistema();
+        });
+
+        // Função para reiniciar o sistema
+        function reiniciarSistema() {
+            // Limpar os itens do pedido e o total
+            document.getElementById("itens-pedido").innerHTML = "";
+            document.getElementById("total").textContent = "0";
+
+            // Limpar o array de itens do pedido
+            itensPedido = [];
+        }
+    </script>
+</body>
+</html>
